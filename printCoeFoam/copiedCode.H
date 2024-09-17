@@ -15,7 +15,6 @@
         rowI[i]=Diag[i];
 
         const cell& c = cells[i];
-	if (UEqn.symmetric())
 	{
             forAll(c, j)
             {
@@ -28,29 +27,11 @@
                          }
                          else
                          {
-		    	    rowI[nei[facei]]= UEqn.upper()[facei];
+		    	    rowI[nei[facei]]= UEqn.lower()[facei];
                          }
 		}
 	    }
 	  }
-          else //asymmetric
-	  {
-	      	forAll(c,j)
-              	{
-			const label facei = c[j];
-                	if (mesh.isInternalFace(facei))
-                	{
-                		if(i ==nei[facei])
-                        	{
-		    	    	    rowI[own[facei]]= UEqn.upper()[facei];
-                		}
-                		else
-                		{
-                		    rowI[nei[facei]]= UEqn.lower()[facei];
-                		}
-			}
-              	}
-           }
 	//Add boundary contributions.
 	
 	//print to console, or print to file.
