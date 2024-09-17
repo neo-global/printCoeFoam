@@ -19,20 +19,24 @@
 
                 if (mesh.isInternalFace(facei))
                 {
-                    Info<<UEqn.upper()[facei]<<"="; //= 0.0;
                    // if (UEqn.symmetric())
                     {
-                        if (i == own[facei])
+                       
+			if (i == own[facei])
                         {
-                            Info<<UEqn.source()[nei[facei]]<<endl; //-= UEqn.upper()[facei]*value;
+		    	    Info<<nei[facei]<<":"<<UEqn.upper()[facei]<<" ";
+                            //Info<<UEqn.source()[nei[facei]]<<endl; //-= UEqn.upper()[facei]*value;
                         }
                         else
                         {
-                            Info<<UEqn.source()[own[facei]]<<endl; // -= UEqn.upper()[facei]*value;
+		    	    Info<<own[facei]<<":"<<UEqn.upper()[facei]<<" ";
+                            //Info<<UEqn.source()[own[facei]]<<endl; // -= UEqn.upper()[facei]*value;
                         }
+			
                     }
 	        }
 	    }
+	    Info<<endl;
 	  }
           else //asymmetric
 	  {
@@ -49,6 +53,7 @@
  	      	}	
 	      	forAll(c,j)
 	        {
+			/*
                 	const label facei = c[j];
                         if (i == own[facei])
                         {
@@ -58,7 +63,9 @@
                         {
                             Info<<"\t"<<UEqn.source()[own[facei]]<<endl; //-= UEqn.upper()[facei]*value;
                         }
+			*/
 		}
+		Info<<endl;
            }
 	}
                 else
