@@ -4,37 +4,49 @@
     const labelUList& nei = mesh.neighbour();
 
     scalarField& Diag = UEqn.diag();
+
+    int cellCount = cells.size();
+    Info <<cellCount<<"x"<<cellCount<<" matrix needed."<<endl;
+    scalarField rowI = UEqn.diag();
+
     forAll(cells, i)
     {
+    	rowI = 0.0;
         if (UEqn.symmetric() || UEqn.asymmetric())
         {
-            const cell& c = cells[i];
-	    Info<<i<<endl;
+          const cell& c = cells[i];
+	  //Info<<i<<endl;
           if (UEqn.symmetric())
 	  {
-            Info<<Diag[i]<<"\t:";
             forAll(c, j)
             {
                 const label facei = c[j];
-
                 if (mesh.isInternalFace(facei))
                 {
-                   // if (UEqn.symmetric())
-                    {
-                       
-			if (i == own[facei])
+                        if(i ==nei[facei])
                         {
-		    	    Info<<nei[facei]<<":"<<UEqn.upper()[facei]<<" ";
-                            //Info<<UEqn.source()[nei[facei]]<<endl; //-= UEqn.upper()[facei]*value;
-                        }
-                        else
+		    	    rowI[own[facei]]= UEqn.upper()[facei];
+		    	    //Info<<own[facei]<<":"<<UEqn.upper()[facei]<<"\t";
+                	}
+		}
+	    }
+            rowI[i]=Diag[i];
+            //Info<<Diag[i]<<"\t";
+	    forAll(c,j)
+	    {
+                const label facei = c[j];
+                if (mesh.isInternalFace(facei))
+                {
+			if (i == own[facei]) //owner is the first id
                         {
-		    	    Info<<own[facei]<<":"<<UEqn.upper()[facei]<<" ";
-                            //Info<<UEqn.source()[own[facei]]<<endl; // -= UEqn.upper()[facei]*value;
+		    	    rowI[nei[facei]]= UEqn.upper()[facei];
+		    	    //Info<<nei[facei]<<":"<<UEqn.upper()[facei]<<"\t";
                         }
-			
-                    }
-	        }
+		}	
+	    }
+	    forAll(rowI,j)
+	    {
+		Info<<rowI[j]<<"\t";
 	    }
 	    Info<<endl;
 	  }
